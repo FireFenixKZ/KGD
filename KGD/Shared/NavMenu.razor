@@ -1,0 +1,31 @@
+﻿<RadzenLayout style="height: 300px">
+    <RadzenHeader>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
+            <RadzenLabel Text="Header" />
+        </RadzenStack>
+    </RadzenHeader>
+    <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                <RadzenPanelMenu>
+                    <RadzenPanelMenuItem Text="Главная" Icon="home" />
+                    <RadzenPanelMenuItem Text="Добавить новый отчет" Icon="account_box" />
+                </RadzenPanelMenu>
+            </Authorized>
+        </AuthorizeView>
+
+        <AuthorizeView Roles="User">
+            <Authorized>
+                <RadzenPanelMenu>
+                    <RadzenPanelMenuItem Text="Главная" Icon="home" />
+                    <RadzenPanelMenuItem Text="Добавить новый отчет" Icon="account_box" />
+                </RadzenPanelMenu>
+            </Authorized>
+        </AuthorizeView>
+    </RadzenSidebar>
+</RadzenLayout>
+
+@code {
+    bool sidebar1Expanded = true;
+}

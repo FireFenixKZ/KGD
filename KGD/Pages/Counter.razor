@@ -1,0 +1,21 @@
+﻿@page "/counter"
+@using KGD.Application.Contracts
+@using KGD.Application.DTO
+@inject IUserService UserService
+
+<PageTitle>Counter</PageTitle>
+@foreach (var i in forecasts)
+{
+    <h1>@i.Id</h1>
+    <h1>@i.Name</h1>
+}
+
+@code {
+
+    private List<UserDTO> forecasts = new List<UserDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await UserService.RetrieveUserListAsync(CancellationToken.None);
+    }
+}

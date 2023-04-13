@@ -1,0 +1,56 @@
+﻿@page "/"
+@using KGD.Application.Contracts;
+@using KGD.Application.DTO;
+@attribute [Authorize]
+@inject NavigationManager _navMgr;
+@inject IReportService reportService;
+<RadzenCard>
+    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" class="mt-2 mb-4" Text="Добавить новый отчет" Click="@Add" />
+    <RadzenButton Text="Export XLS" Icon="grid_on" Click="@(args => Export("excel"))" class="mb-4 me-2" />
+    <RadzenButton Text="Export CSV" Icon="wrap_text" Click="@(args => Export("csv"))" class="mb-4" />
+    <RadzenDataGrid AllowFiltering="true" ColumnsShowingText="Столбец" AllowColumnPicking="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@reportList" TItem="ReportDTO" LogicalFilterOperator="LogicalFilterOperator.Or" EqualsText="Равно" ContainsText="Содержит">
+        <Columns>
+            <RadzenDataGridColumn TItem="ReportDTO" Property="Id" Title="ID" Width="50px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="KGDCode" Title="Код ДГД" Width="100px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="Department" Title="Департамент" Width="150px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="NP_BIN" Title="БИН/ИИН проверяемого НП" Width="100px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="NPName" Title="Наименование НП" Width="200px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="CreatedDate" Title="Дата открытия дела" Width="150px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="UpdatedDate" Title="Дата обновления дела" Width="150px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="Regulation" Title="№ предписания" Width="150px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="RegulationDate" Title="Дата вручения предписания" Width="150px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="PeriodNP" Title="Период по искл. неблагонадежных НП  (год)" Width="100px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="ExceptedNPName" Title="Наименование неблагонадежных НП, исключенных в ходе проверки" Width="200px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="ExceptedNPBIN" Title="БИН/ИИН неблагонадежных НП исключенных в ходе проверки" Width="100px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="ServiceType" Title="Вид услуги" Width="150px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="TotalSum" Title="Всего взаиморасчеты, тг." Width="100px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="OborotSumm" Title="Сумма оборота" Width="100px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="TaxSumm" Title="Сумма НДС" Width="100px" />
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+@code {
+    IEnumerable<ReportDTO> reportList = new List<ReportDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        reportList = await reportService.GetReports();
+    }
+    public void Add()
+    {
+        _navMgr.NavigateTo("/add");
+    }
+    public void Export(string type)
+    {
+        //service.Export("OrderDetails", type, new Query()
+        //    {
+        //        OrderBy = grid.Query.OrderBy,
+        //        Filter = grid.Query.Filter,
+        //        Select = string.Join(",", grid.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property))
+        //                    .Select(c => c.Property.Contains(".") ? $"{c.Property} as {c.Property.Replace(".", "_")}" : c.Property))
+        //    });
+    }
+}

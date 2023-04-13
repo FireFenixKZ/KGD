@@ -1,0 +1,57 @@
+﻿@page "/login"
+@using KGD.Application.DTO;
+@using BlazorEcommerce.Shared
+@using Blazored.LocalStorage
+@using KGD.Application.Contracts
+@using KGD.AuthProviders
+@inject IAuthService _authService;
+@inject AuthenticationStateProvider _authStateProvider;
+@inject ILocalStorageService _localStorage;
+@inject NavigationManager _navMgr;
+<div style="display:flex; justify-content:center; align-content:center;align-items:center;">
+    <RadzenCard Style="width:35%;">
+        <h3>Login</h3>
+
+        <div class="row">
+            <div class="col-md-12">
+                <EditForm Model="@loginModel" OnValidSubmit="DoLogin">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="Username">Username</label>
+                        <InputText class="form-control" @bind-Value="loginModel.Email" />
+                        <ValidationMessage For="@(()=>loginModel.Password)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Password">Password</label>
+                        <InputText type="password" class="form-control" @bind-Value="loginModel.Password" />
+                        <ValidationMessage For="@(()=>loginModel.Password)" />
+                    </div>
+
+                    <div class="my-2">
+                        @loginResponse.Message
+                    </div>
+
+                    <div class="my-2">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </RadzenCard>
+</div>
+@code {
+    LoginModel loginModel = new();
+    ServiceResponse<string> loginResponse = new();
+    async Task DoLogin()
+    {
+        loginResponse.Message = "Wait....";
+        loginResponse = await _authService.Login(loginModel);
+        if (loginResponse.Success)
+        {
+            _localStorage.SetItemAsync("accessToken", loginResponse.Data);
+            ((AuthProvider)_authStateProvider).NotifyUserAuthentication(loginResponse.Data);
+            _navMgr.NavigateTo("/");
+        }
+    }
+}

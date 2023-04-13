@@ -1,0 +1,112 @@
+﻿@page "/add"
+@using KGD.Application.Contracts;
+@using KGD.Application.DTO;
+@using KGD.Data.DTO;
+@using KGD.Services;
+@inject IReportService reportService;
+
+<h3>Добавление нового отчета</h3>
+
+<RadzenCard>
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="KGD Code" />
+            <RadzenTextBox Style="width:100%;" @bind-Value="@report.KGDCode" />
+        </div>
+        <div class="col-md-6">
+            <RadzenLabel Text="Department" />
+            <RadzenDropDown Style="width:100%;" @bind-Value="@report.Department" Data="DepartmentList">
+            </RadzenDropDown>
+        </div>
+    </div>    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="NP BIN" />
+            <RadzenDropDown Style="width:100%;" @bind-Value="@report.NPName" Data="TaxPayers">
+            </RadzenDropDown>
+        </div>
+    </div>    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="Regulation" />
+            <RadzenTextBox Style="width:100%;" @bind-Value="@report.Regulation" />
+        </div>
+        <div class="col-md-6">
+            <RadzenLabel Text="Period NP" />
+            <RadzenTextBox Style="width:100%;" @bind-Value="@report.PeriodNP" />
+        </div>
+    </div>    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="Excepted NP Name" />
+            <RadzenDropDown Style="width:100%;" @bind-Value="@report.ExceptedNPName" Data="TaxPayers">
+            </RadzenDropDown>
+        </div>
+    </div>    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="Service Type" />
+            <RadzenDropDown Style="width:100%;" @bind-Value="@report.ServiceType" Data="ServiceTypes">
+            </RadzenDropDown>
+        </div>
+
+        <div class="col-md-6">
+            <RadzenLabel Text="Total Sum" />
+            <RadzenNumeric Style="width:100%;" @bind-Value="@report.TotalSum" />
+        </div>
+    </div>    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="Oborot Summ" />
+            <RadzenNumeric Style="width:100%;" @bind-Value="@report.OborotSumm" />
+        </div>
+        <div class="col-md-6">
+            <RadzenLabel Text="Tax Summ" />
+            <RadzenNumeric Style="width:100%;" @bind-Value="@report.TaxSumm" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-6" style="text-align:end;">
+            <RadzenButton Text="Отменить" ButtonStyle="ButtonStyle.Secondary" @onclick="@(() => navigationManager.NavigateTo("/reports"))" />
+            <RadzenButton Text="Очистить" Click="OnClear" />
+            <RadzenButton Text="Добавить" ButtonStyle="ButtonStyle.Success" Click="OnSubmit" />
+        </div>
+    </div>
+</RadzenCard>
+
+@code {
+    private ReportDTO report = new ReportDTO();
+    private List<string> DepartmentList = new List<string>();
+    private List<string> ServiceTypes = new List<string>();
+    private List<string> TaxPayers = new List<string>();
+
+    [Inject]
+    private NavigationManager navigationManager { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        DepartmentList = (await reportService.GetDepartments()).Select(s=>s.Name).ToList();
+        ServiceTypes = (await reportService.GetServiceTypes()).Select(s => s.Name).ToList();
+        TaxPayers = (await reportService.GetTaxPayers()).Select(s => s.Name).ToList();
+    }
+
+    private void OnSubmit()
+    {
+        // Save the new report
+        // ...
+
+        // Clear the form fields
+        //reportForm.Reset();
+    }
+
+    private void OnClear()
+    {
+        // Clear the form fields
+        report = new ReportDTO();
+        //reportForm.Reset();
+    }
+}
