@@ -10,5 +10,6 @@ namespace KGD.Application.Contracts
         Task<List<TaxPayerDTO>> GetTaxPayers();
         Task<List<ServiceTypeDTO>> GetServiceTypes();
         Task<ReportDTO> GetReportById(int id);
+        Task AddReport(ReportDTO reportDTO);
     }
 }

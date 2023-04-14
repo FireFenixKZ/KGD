@@ -120,5 +120,24 @@ namespace KGD.Application.Services.Report
             }
             return taxPayerList;
         }
+        public async Task AddReport(ReportDTO reportDTO)
+        {
+            await _reportRepository.AddReport(new Domain.Entity.Report()
+            {
+                CreatedDate = DateTime.Now,
+                DepartmentId = reportDTO.DepartmentId,
+                ExceptedTaxPayerId = reportDTO.ExceptedNPId,
+                KGDCode = reportDTO.KGDCode,
+                OborotSumm = reportDTO.OborotSumm,
+                Regulation = reportDTO.Regulation,
+                PeriodNP = reportDTO.PeriodNP,
+                TaxSumm = reportDTO.TaxSumm,
+                TotalSum = reportDTO.TotalSum,
+                UpdatedDate = DateTime.Now,
+                ServiceTypeId = reportDTO.ServiceTypeId,
+                TaxPayerId = reportDTO.NPId,
+                RegulationDate = DateTime.Now,
+            });
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace KGD.Application.Contracts
         Task<List<Region>> GetRegions(CancellationToken cancellationToken);
         Task<List<ServiceType>> GetServiceTypes(CancellationToken cancellationToken);
         Task<Report> GetReportById(int id, CancellationToken cancellationToken);
+        Task AddReport(Report report);
     }
 }

@@ -26,7 +26,7 @@ namespace KGD.Infrastructure.Repository
 
         public async Task<List<Report>> GetReports(CancellationToken cancellationToken)
         {
-            return await _context.Reports.ToListAsync(cancellationToken);
+            return await _context.Reports.Include(s => s.TaxPayer).Include(s => s.Department).Include(s => s.ExceptedTaxPayer).Include(s => s.ServiceType).ToListAsync(cancellationToken);
         }
 
         public async Task<Report> GetReportById(int id, CancellationToken cancellationToken)
@@ -42,6 +42,11 @@ namespace KGD.Infrastructure.Repository
         public async Task<List<TaxPayer>> GetTaxPayers(CancellationToken cancellationToken)
         {
             return await _context.TaxPayers.ToListAsync(cancellationToken);
+        }
+        public async Task AddReport(Report report)
+        {
+            _context.Reports.Add(report);
+            await _context.SaveChangesAsync();
         }
     }
 }

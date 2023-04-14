@@ -15,15 +15,39 @@
         </div>
         <div class="col-md-6">
             <RadzenLabel Text="Department" />
-            <RadzenDropDown Style="width:100%;" @bind-Value="@report.Department" Data="DepartmentList">
-            </RadzenDropDown>
+            <div class="form-group">
+                <select style="width:100%;" for="Publisher" class="form-control"
+                        @bind="@report.DepartmentId">
+                    <option value=0 disabled selected hidden>
+                        [Select Department]
+                    </option>
+                    @foreach (var publisher in DepartmentList)
+                    {
+                        <option value="@publisher.Id">
+                            @publisher.Name
+                        </option>
+                    }
+                </select>
+            </div>
         </div>
     </div>    <br />
     <div class="row">
         <div class="col-md-6">
             <RadzenLabel Text="NP BIN" />
-            <RadzenDropDown Style="width:100%;" @bind-Value="@report.NPName" Data="TaxPayers">
-            </RadzenDropDown>
+            <div class="form-group">
+                <select style="width:100%;" for="Publisher" class="form-control"
+                        @bind="@report.NPId">
+                    <option value=0 disabled selected hidden>
+                        [Select TaxPayers]
+                    </option>
+                    @foreach (var publisher in TaxPayers)
+                    {
+                        <option value="@publisher.Id">
+                            @publisher.Name
+                        </option>
+                    }
+                </select>
+            </div>
         </div>
     </div>    <br />
     <div class="row">
@@ -39,15 +63,39 @@
     <div class="row">
         <div class="col-md-6">
             <RadzenLabel Text="Excepted NP Name" />
-            <RadzenDropDown Style="width:100%;" @bind-Value="@report.ExceptedNPName" Data="TaxPayers">
-            </RadzenDropDown>
+            <div class="form-group">
+                <select style="width:100%;" for="Publisher" class="form-control"
+                        @bind="@report.ExceptedNPId">
+                    <option value=0 disabled selected hidden>
+                        [Select ExceptedNPId]
+                    </option>
+                    @foreach (var publisher in TaxPayers)
+                    {
+                        <option value="@publisher.Id">
+                            @publisher.Name
+                        </option>
+                    }
+                </select>
+            </div>
         </div>
     </div>    <br />
     <div class="row">
         <div class="col-md-6">
             <RadzenLabel Text="Service Type" />
-            <RadzenDropDown Style="width:100%;" @bind-Value="@report.ServiceType" Data="ServiceTypes">
-            </RadzenDropDown>
+            <div class="form-group">
+                <select style="width:100%;" for="Publisher" class="form-control"
+                        @bind="@report.ServiceTypeId">
+                    <option value=0 disabled selected hidden>
+                        [Select ServiceTypes]
+                    </option>
+                    @foreach (var publisher in ServiceTypes)
+                    {
+                        <option value="@publisher.Id">
+                            @publisher.Name
+                        </option>
+                    }
+                </select>
+            </div>
         </div>
 
         <div class="col-md-6">
@@ -78,9 +126,9 @@
 
 @code {
     private ReportDTO report = new ReportDTO();
-    private List<string> DepartmentList = new List<string>();
-    private List<string> ServiceTypes = new List<string>();
-    private List<string> TaxPayers = new List<string>();
+    private List<DepartmentDTO> DepartmentList = new List<DepartmentDTO>();
+    private List<ServiceTypeDTO> ServiceTypes = new List<ServiceTypeDTO>();
+    private List<TaxPayerDTO> TaxPayers = new List<TaxPayerDTO>();
 
     [Inject]
     private NavigationManager navigationManager { get; set; }
@@ -89,24 +137,19 @@
     {
         await base.OnInitializedAsync();
 
-        DepartmentList = (await reportService.GetDepartments()).Select(s=>s.Name).ToList();
-        ServiceTypes = (await reportService.GetServiceTypes()).Select(s => s.Name).ToList();
-        TaxPayers = (await reportService.GetTaxPayers()).Select(s => s.Name).ToList();
+        DepartmentList = await reportService.GetDepartments();
+        ServiceTypes = await reportService.GetServiceTypes();
+        TaxPayers = await reportService.GetTaxPayers();
     }
 
-    private void OnSubmit()
+    private async void OnSubmit()
     {
-        // Save the new report
-        // ...
-
-        // Clear the form fields
-        //reportForm.Reset();
+        await reportService.AddReport(report);
+        navigationManager.NavigateTo("/");
     }
 
     private void OnClear()
     {
-        // Clear the form fields
         report = new ReportDTO();
-        //reportForm.Reset();
     }
 }
