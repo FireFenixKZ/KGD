@@ -38,6 +38,30 @@ namespace KGD.Application.Services.Report
             }
             return reportDTOs;
         }
+
+        public async Task<ReportDTO> GetReportById(int id)
+        {
+            var report = await _reportRepository.GetReportById(id, CancellationToken.None);
+            return new ReportDTO
+            {
+                Id = report.Id,
+                KGDCode = report.KGDCode,
+                Department = report.Department.Name,
+                NP_BIN = report.TaxPayer.Bin,
+                NPName = report.TaxPayer.Name,
+                CreatedDate = report.CreatedDate,
+                UpdatedDate = report.UpdatedDate,
+                Regulation = report.Regulation,
+                RegulationDate = report.RegulationDate,
+                PeriodNP = report.PeriodNP,
+                ExceptedNPName = report.ExceptedTaxPayer.Name,
+                ExceptedNPBIN = report.ExceptedTaxPayer.Bin,
+                ServiceType = report.ServiceType.Name,
+                TotalSum = report.TotalSum,
+                OborotSumm = report.OborotSumm,
+                TaxSumm = report.TaxSumm
+            };
+        }
         public async Task<List<RegionDTO>> GetRegions()
         {
             var regionList = new List<RegionDTO>();

@@ -29,6 +29,11 @@ namespace KGD.Infrastructure.Repository
             return await _context.Reports.ToListAsync(cancellationToken);
         }
 
+        public async Task<Report> GetReportById(int id, CancellationToken cancellationToken)
+        {
+            return await _context.Reports.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+        }
+
         public async Task<List<ServiceType>> GetServiceTypes(CancellationToken cancellationToken)
         {
             return await _context.ServiceTypes.ToListAsync(cancellationToken);

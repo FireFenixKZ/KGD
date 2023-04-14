@@ -1,9 +1,4 @@
 ﻿using KGD.Application.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KGD.Application.Contracts
 {
@@ -14,5 +9,6 @@ namespace KGD.Application.Contracts
         Task<List<DepartmentDTO>> GetDepartments();
         Task<List<TaxPayerDTO>> GetTaxPayers();
         Task<List<ServiceTypeDTO>> GetServiceTypes();
+        Task<ReportDTO> GetReportById(int id);
     }
 }

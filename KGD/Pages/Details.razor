@@ -1,0 +1,120 @@
+﻿@page "/details/{Id:int}"
+@using KGD.Application.Contracts;
+@using KGD.Application.DTO;
+@using KGD.Components;
+@using KGD.Data.DTO;
+@inject IReportService _reportService;
+@inject DialogService DialogService
+
+
+<h3>Детали отчета</h3>
+
+<RadzenCard>
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="KGD Code" />
+            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.KGDCode" />
+        </div>
+        <div class="col-md-6">
+            <RadzenLabel Text="Department" />
+            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.Department" />
+        </div>
+    </div>    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="NP BIN" />
+            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.NP_BIN" />
+        </div>
+    </div>    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="Regulation" />
+            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.Regulation" />
+        </div>
+        <div class="col-md-6">
+            <RadzenLabel Text="Period NP" />
+            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.PeriodNP" />
+        </div>
+    </div>    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="Excepted NP Name" />
+            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.ExceptedNPName" />
+        </div>
+    </div>    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="Service Type" />
+            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.ServiceType" />
+        </div>
+
+        <div class="col-md-6">
+            <RadzenLabel Text="Total Sum" />
+            <RadzenNumeric Disabled="true" Style="width:100%;" @bind-Value="@report.TotalSum" />
+        </div>
+    </div>    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <RadzenLabel Text="Oborot Summ" />
+            <RadzenNumeric Disabled="true" Style="width:100%;" @bind-Value="@report.OborotSumm" />
+        </div>
+        <div class="col-md-6">
+            <RadzenLabel Text="Tax Summ" />
+            <RadzenNumeric Disabled="true" Style="width:100%;" @bind-Value="@report.TaxSumm" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-6" style="text-align:end;">
+            <RadzenButton Text="Назад" ButtonStyle="ButtonStyle.Secondary" @onclick="@(() => navigationManager.NavigateTo("/reports"))" />
+            <RadzenButton Text="История отчета" ButtonStyle="ButtonStyle.Primary" Click="History" />
+        </div>
+    </div>
+</RadzenCard>
+
+<Modal @ref="@ModalDialog" Title="История отчета">
+    <div class="row">
+        <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                        Data="@history" TItem="History" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+            <Columns>
+                <RadzenDataGridColumn TItem="History" Property="CreatedTime" Title="Дата" Width="100px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="History" Property="FIO" Title="ФИО" Frozen="true" Width="160px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="History" Property="Action" Title="Действие" Width="160px" TextAlign="TextAlign.Center" />
+            </Columns>
+        </RadzenDataGrid>
+    </div>
+    <br />
+    <div class="row">
+        <button class="btn btn-primary" @onclick="() => ModalDialog.Close()">Закрыть</button>
+    </div>
+</Modal>
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    [Inject]
+    private NavigationManager navigationManager { get; set; }
+    private ReportDTO report = new ReportDTO();
+    private List<History> history = new List<History>()
+    {
+    new History()
+    {
+        CreatedTime = DateTime.Now,
+        Action="Created",
+        FIO="User"
+    }
+    };
+    private Modal ModalDialog { get; set; }
+    int orderID = 10248;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //report = await _reportService.GetReportById(Id.Value);
+    }
+
+    public async Task History()
+    {
+        await Task.CompletedTask;
+        ModalDialog.Open();
+    }
+}

@@ -7,12 +7,13 @@ using KGD.Infrastructure;
 using KGD.Services;
 using KGD.Services.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddApplicationLayer();
 builder.Services.AddInfrastructureLayer(builder.Configuration.GetConnectionString("KGDDatabase"));
-
+builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
 builder.Services.AddServerSideBlazor();
