@@ -8,7 +8,7 @@
                     <Authorized>
                         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
                             <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
-                            <RadzenLabel Text="КГД" />
+                            <RadzenLabel Text="КГД" @onclick="@(() => _navMgr.NavigateTo("/"))" />
                         </RadzenStack>
                     </Authorized>
                 </AuthorizeView>
@@ -17,12 +17,12 @@
                 <AuthorizeView>
                     <Authorized>
                         <NavLink href="logout" Match="NavLinkMatch.All">
-                            Logout
+                            Выход
                         </NavLink>
                     </Authorized>
                     <NotAuthorized>
                         <NavLink href="login" Match="NavLinkMatch.All">
-                            Login
+                            Вход
                         </NavLink>
                     </NotAuthorized>
                 </AuthorizeView>
@@ -35,21 +35,12 @@
                 <RadzenPanelMenu>
                     <ChildContent>
                         <RadzenPanelMenuItem Text="Отчеты">
-                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 1_КЭР"></RadzenPanelMenuItem>
-                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 2_Обжалования"></RadzenPanelMenuItem>
-                            <a href="/" style="text-decoration: none !important;color: black;">
-                                <RadzenPanelMenuItem Icon="account_box" Text="Приложение 3_Неблагонадежные поставщики"></RadzenPanelMenuItem>
-                            </a>
-                        </RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Text="Выгрузка отчетов">
-                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 1_КЭР"></RadzenPanelMenuItem>
-                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 2_Обжалования"></RadzenPanelMenuItem>
-                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 3_Неблагонадежные поставщики"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Style="font-size:large" Icon="account_box" Click="@(() => _navMgr.NavigateTo("/"))" Text="Приложение 3_Неблагонадежные поставщики"></RadzenPanelMenuItem>
                         </RadzenPanelMenuItem>
                         <RadzenPanelMenuItem Text="Справочники">
                             <RadzenPanelMenuItem Icon="account_box" Text="Код ДГД"></RadzenPanelMenuItem>
                             <RadzenPanelMenuItem Icon="account_box" Text="Департаменты"></RadzenPanelMenuItem>
-                            <RadzenPanelMenuItem Icon="account_box" Text="Неблагонадежные поставщики"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Click="@(() => _navMgr.NavigateTo("/taxpayer"))" Icon="account_box" Text="Неблагонадежные поставщики"></RadzenPanelMenuItem>
                         </RadzenPanelMenuItem>
                     </ChildContent>
                 </RadzenPanelMenu>
@@ -60,25 +51,20 @@
     <AuthorizeView Roles="User">
         <Authorized>
             <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
-                <ChildContent>
-                    <RadzenPanelMenuItem Text="Отчеты">
-                        <RadzenPanelMenuItem Icon="account_box" Text="Приложение 1_КЭР"></RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Icon="account_box" Text="Приложение 2_Обжалования"></RadzenPanelMenuItem>
-                        <a href="/" style="text-decoration: none !important;color: black;">
-                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 3_Неблагонадежные поставщики"></RadzenPanelMenuItem>
-                        </a>
-                    </RadzenPanelMenuItem>
-                    <RadzenPanelMenuItem Text="Выгрузка отчетов">
-                        <RadzenPanelMenuItem Icon="account_box" Text="Приложение 1_КЭР"></RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Icon="account_box" Text="Приложение 2_Обжалования"></RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Icon="account_box" Text="Приложение 3_Неблагонадежные поставщики"></RadzenPanelMenuItem>
-                    </RadzenPanelMenuItem>
-                    <RadzenPanelMenuItem Text="Справочники">
-                        <RadzenPanelMenuItem Icon="account_box" Text="Код ДГД"></RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Icon="account_box" Text="Департаменты"></RadzenPanelMenuItem>
-                        <RadzenPanelMenuItem Icon="account_box" Text="Неблагонадежные поставщики"></RadzenPanelMenuItem>
-                    </RadzenPanelMenuItem>
-                </ChildContent>
+                <RadzenPanelMenu>
+                    <ChildContent>
+                        <RadzenPanelMenuItem Text="Отчеты">
+                            <a href="/" style="text-decoration: none !important;color: black;">
+                                <RadzenPanelMenuItem Icon="account_box" Text="Приложение 3_Неблагонадежные поставщики"></RadzenPanelMenuItem>
+                            </a>
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Справочники">
+                            <RadzenPanelMenuItem Icon="account_box" Text="Код ДГД"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Icon="account_box" Text="Департаменты"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Icon="account_box" Text="Неблагонадежные поставщики"></RadzenPanelMenuItem>
+                        </RadzenPanelMenuItem>
+                    </ChildContent>
+                </RadzenPanelMenu>
             </RadzenSidebar>
         </Authorized>
     </AuthorizeView>

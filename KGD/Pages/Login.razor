@@ -49,8 +49,8 @@
         loginResponse = await _authService.Login(loginModel);
         if (loginResponse.Success)
         {
-            _localStorage.SetItemAsync("accessToken", loginResponse.Data);
-            ((AuthProvider)_authStateProvider).NotifyUserAuthentication(loginResponse.Data);
+            await _localStorage.SetItemAsync("accessToken", loginResponse.Data);
+            await ((AuthProvider)_authStateProvider).GetAuthenticationStateAsync();
             _navMgr.NavigateTo("/");
         }
     }

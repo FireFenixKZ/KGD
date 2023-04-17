@@ -1,7 +1,8 @@
-﻿@page "/addtaxpayer"
+﻿@page "/edittaxpayer"
 @using KGD.Application.DTO;
+
 @inject NavigationManager _navMgr;
-<h3>Добавление нового Налого плательщика</h3>
+<h3>Изменение плательщика</h3>
 
 <RadzenCard>
     <div class="row">
@@ -15,9 +16,8 @@
         </div>
     </div>
     <br />
-    <RadzenButton Text="Добавить" ButtonStyle="ButtonStyle.Success" Click="OnSubmit" />
+    <RadzenButton Text="Изменить" ButtonStyle="ButtonStyle.Success" Click="OnSubmit" />
     <RadzenButton Text="Назад" ButtonStyle="ButtonStyle.Secondary" Click="@(() => _navMgr.NavigateTo("/taxpayer"))" />
-
 </RadzenCard>
 @code {
     private TaxPayerDTO taxPayerDTO = new TaxPayerDTO();

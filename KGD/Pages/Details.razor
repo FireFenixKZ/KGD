@@ -5,6 +5,7 @@
 @using KGD.Data.DTO;
 @inject IReportService _reportService;
 @inject DialogService DialogService
+@inject IUserService UserService
 
 
 <h3>Детали отчета</h3>
@@ -12,63 +13,76 @@
 <RadzenCard>
     <div class="row">
         <div class="col-md-6">
-            <RadzenLabel Text="KGD Code" />
-            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.KGDCode" />
+            <RadzenLabel Text="Отчет за период" />
+            <RadzenDatePicker Style="width:100%;" @bind-Value="@report.ReportCreatedPeriod" DateFormat="mm:yyyy" />
         </div>
         <div class="col-md-6">
-            <RadzenLabel Text="Department" />
+            <RadzenLabel Text="Департамент" />
             <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.Department" />
+
         </div>
     </div>    <br />
     <div class="row">
         <div class="col-md-6">
-            <RadzenLabel Text="NP BIN" />
+            <RadzenLabel Text="БИН/ИИН проверяемого НП" />
             <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.NP_BIN" />
+
+        </div>
+        <div class="col-md-6">
+            <RadzenLabel Text="Период по искл. неблагонадежных НП  (год)" />
+            <RadzenDatePicker Style="width:45%;" @bind-Value="@report.PeriodNPFrom" DateFormat="dd:mm:yyyy" />
+            -
+            <RadzenDatePicker Style="width:45%;" @bind-Value="@report.PeriodNPTo" DateFormat="dd:mm:yyyy" />
         </div>
     </div>    <br />
     <div class="row">
         <div class="col-md-6">
-            <RadzenLabel Text="Regulation" />
-            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.Regulation" />
+            <RadzenLabel Text="Номер предписания" />
+            <RadzenTextBox Style="width:100%;" @bind-Value="@report.Regulation" />
         </div>
         <div class="col-md-6">
-            <RadzenLabel Text="Period NP" />
-            <RadzenDatePicker Disabled="true" Style="width:100%;" @bind-Value="@report.PeriodNPFrom" DateFormat="dd:mm:yyyy" />
-            <RadzenDatePicker Disabled="true" Style="width:100%;" @bind-Value="@report.PeriodNPTo" DateFormat="dd:mm:yyyy" />
+            <RadzenLabel Text="Дата вручения предписания" />
+            <RadzenDatePicker Style="width:100%;" @bind-Value="@report.RegulationDate" DateFormat="dd:mm:yyyy" />
         </div>
     </div>    <br />
     <div class="row">
         <div class="col-md-6">
-            <RadzenLabel Text="Excepted NP Name" />
+            <RadzenLabel Text="Наименование неблагонадежных НП, исключенных в ходе проверки" />
             <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.ExceptedNPName" />
+
+        </div>
+        <div class="col-md-6">
+            <RadzenLabel Text="Тип услуги" />
+            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.ServiceType" />
+
         </div>
     </div>    <br />
     <div class="row">
-        <div class="col-md-6">
-            <RadzenLabel Text="Service Type" />
-            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.ServiceType" />
-        </div>
+        @*     <div class="col-md-6">
+        <RadzenLabel Text="Код ДГД" />
+        <RadzenTextBox Style="width:100%;" @bind-Value="@report.KGDCode" />
+        </div>*@
 
         <div class="col-md-6">
-            <RadzenLabel Text="Total Sum" />
-            <RadzenNumeric Disabled="true" Style="width:100%;" @bind-Value="@report.TotalSum" />
+            <RadzenLabel Text="Общая сумма" />
+            <RadzenNumeric Style="width:100%;" @bind-Value="@report.TotalSum" />
         </div>
     </div>    <br />
     <div class="row">
         <div class="col-md-6">
-            <RadzenLabel Text="Oborot Summ" />
-            <RadzenNumeric Disabled="true" Style="width:100%;" @bind-Value="@report.OborotSumm" />
+            <RadzenLabel Text="Сумма оборота" />
+            <RadzenNumeric Style="width:100%;" @bind-Value="@report.OborotSumm" />
         </div>
         <div class="col-md-6">
-            <RadzenLabel Text="Tax Summ" />
-            <RadzenNumeric Disabled="true" Style="width:100%;" @bind-Value="@report.TaxSumm" />
+            <RadzenLabel Text="Сумма НДС" />
+            <RadzenNumeric Style="width:100%;" @bind-Value="@report.TaxSumm" />
         </div>
     </div>
     <br />
     <div class="row">
         <div class="col-md-6"></div>
         <div class="col-md-6" style="text-align:end;">
-            <RadzenButton Text="Назад" ButtonStyle="ButtonStyle.Secondary" @onclick="@(() => navigationManager.NavigateTo("/reports"))" />
+            <RadzenButton Text="Назад" ButtonStyle="ButtonStyle.Secondary" Click="@(() => navigationManager.NavigateTo("/"))" />
             <RadzenButton Text="История отчета" ButtonStyle="ButtonStyle.Primary" Click="History" />
         </div>
     </div>
@@ -77,11 +91,11 @@
 <Modal @ref="@ModalDialog" Title="История отчета">
     <div class="row">
         <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                        Data="@history" TItem="History" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                        Data="@history" TItem="ReportHistoryDTO" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
             <Columns>
-                <RadzenDataGridColumn TItem="History" Property="CreatedTime" Title="Дата" Width="100px" TextAlign="TextAlign.Center" />
-                <RadzenDataGridColumn TItem="History" Property="FIO" Title="ФИО" Frozen="true" Width="160px" TextAlign="TextAlign.Center" />
-                <RadzenDataGridColumn TItem="History" Property="Action" Title="Действие" Width="160px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="ReportHistoryDTO" Property="CreatedDateTime" Title="Дата" Width="100px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="ReportHistoryDTO" Property="UserName" Title="ФИО" Frozen="true" Width="160px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="ReportHistoryDTO" Property="Action" Title="Действие" Width="160px" TextAlign="TextAlign.Center" />
             </Columns>
         </RadzenDataGrid>
     </div>
@@ -96,15 +110,7 @@
     [Inject]
     private NavigationManager navigationManager { get; set; }
     private ReportDTO report = new ReportDTO();
-    private List<History> history = new List<History>()
-    {
-    new History()
-    {
-        CreatedTime = DateTime.Now,
-        Action="Created",
-        FIO="User"
-    }
-    };
+    private List<ReportHistoryDTO> history = new List<ReportHistoryDTO>();
     private Modal ModalDialog { get; set; }
     int orderID = 10248;
 
@@ -115,6 +121,15 @@
 
     public async Task History()
     {
+        history = await _reportService.GetReportHistory(Id.Value);
+        if (history.Count > 0)
+        {
+            foreach (var item in history)
+            {
+                var user = (await UserService.RetrieveUserListAsync(CancellationToken.None)).FirstOrDefault(s => s.Id == item.UserId);
+                item.UserName = user.Name;
+            }
+        }
         await Task.CompletedTask;
         ModalDialog.Open();
     }

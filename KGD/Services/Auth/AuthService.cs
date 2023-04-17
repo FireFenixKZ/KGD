@@ -59,7 +59,7 @@ public class AuthService : IAuthService
 
         user.PasswordHash = passwordHash;
         user.PasswordSalt = passwordSalt;
-        user.Role = "User";
+        user.Role = "Admin";
         user.DepartmentId = 1;
 
         await _userRepository.AddUser(user);

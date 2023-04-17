@@ -18,8 +18,14 @@ namespace KGD.Infrastructure.Repository
 
         public async Task AddUser(User user)
         {
-            _context.Add(user);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+            }catch (Exception ex)
+            {
+
+            }
         }
 
         public async Task<User> GetUserByEmail(string email)

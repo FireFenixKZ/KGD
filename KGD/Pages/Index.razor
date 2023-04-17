@@ -1,11 +1,16 @@
 ﻿@page "/"
 @using KGD.Application.Contracts;
 @using KGD.Application.DTO;
+@using KGD.AuthProviders;
 @attribute [Authorize]
 @inject NavigationManager _navMgr;
 @inject NotificationService _notificationService;
 @inject IReportService reportService;
 @inject IAuthService authService;
+@inject AuthProvider authProvider;
+@inject IUserService UserService
+
+<h3>Приложение 3_Неблагонадежные поставщики</h3>
 <RadzenCard>
     <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" class="mt-2 mb-4" Text="Добавить новый отчет" Click="@Add" />
     <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="add_circle_outline" class="mt-2 mb-4" Text="Посмотреть отчет" Click="@Details" />
@@ -15,7 +20,7 @@
     <RadzenDataGrid AllowFiltering="true" AllowRowSelectOnRowClick="true"
                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                     SelectionMode="DataGridSelectionMode.Single"
-                    ColumnsShowingText="Столбец"
+                    ColumnsShowingText="Столбцов"
                     AllowColumnPicking="true"
                     AllowAlternatingRows="false"
                     FilterMode="FilterMode.Simple"
@@ -50,17 +55,21 @@
 @code {
     IEnumerable<ReportDTO> reportList = new List<ReportDTO>();
     IList<ReportDTO> SelectedReportList = new List<ReportDTO>();
+    private string? UserRole = null;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        if (authService.GetUserRole() == "Admin")
+
+        var authstate = await authProvider.GetAuthenticationStateAsync();
+        UserRole = authstate.User.FindFirst(System.Security.Claims.ClaimTypes.Role).Value;
+        if (UserRole == "Admin")
         {
             reportList = await reportService.GetReports();
         }
         else
         {
-            reportList = await reportService.GetReports(Convert.ToInt32(authService.GetUserDepartmentId()));
+            reportList = await reportService.GetReports(Convert.ToInt32(authstate.User.FindFirst(System.Security.Claims.ClaimTypes.Country).Value));
         }
     }
     public void Add()

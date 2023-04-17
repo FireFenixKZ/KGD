@@ -1,0 +1,50 @@
+﻿@page "/taxpayer"
+@using KGD.Application.Contracts;
+@using KGD.Application.DTO;
+@attribute [Authorize]
+@inject NavigationManager _navMgr;
+@inject NotificationService _notificationService;
+@inject IReportService reportService;
+@inject IAuthService authService;
+<RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" class="mt-2 mb-4" Text="Добавить новый отчет" Click="@Add" />
+<RadzenButton ButtonStyle="ButtonStyle.Light" Icon="add_circle_outline" class="mt-2 mb-4" Text="Изменить отчет" Click="@Edit" />
+<RadzenDataGrid AllowFiltering="true" AllowRowSelectOnRowClick="true"
+                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                SelectionMode="DataGridSelectionMode.Single"
+                ColumnsShowingText="Столбец"
+                AllowColumnPicking="true"
+                AllowAlternatingRows="false"
+                FilterMode="FilterMode.Simple"
+                AllowSorting="true"
+                PageSize="5"
+                Density="Density.Compact"
+                AllowPaging="true"
+                PagerHorizontalAlign="HorizontalAlign.Left"
+                ShowPagingSummary="true"
+                Data="@reportList" TItem="TaxPayerDTO" EqualsText="Равно" ContainsText="Содержит"
+                @bind-Value=@SelectedReportList>
+    <Columns>
+        <RadzenDataGridColumn TItem="TaxPayerDTO" Property="Id" Title="ID" MinWidth="60px" />
+        <RadzenDataGridColumn TItem="TaxPayerDTO" Property="Name" Title="Код ДГД" MinWidth="100px" />
+        <RadzenDataGridColumn TItem="TaxPayerDTO" Property="Bin" Title="Код ДГД" MinWidth="100px" />
+    </Columns>
+</RadzenDataGrid>
+@code {
+    IEnumerable<TaxPayerDTO> reportList = new List<TaxPayerDTO>();
+    IList<TaxPayerDTO> SelectedReportList = new List<TaxPayerDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+    public void Add()
+    {
+        _navMgr.NavigateTo("/addtaxpayer");
+    }
+    public async Task Edit()
+    {
+        var selected = SelectedReportList.FirstOrDefault();
+        if (selected != null)
+            _navMgr.NavigateTo($"/edittaxpayer/{selected.Id}");
+    }
+}

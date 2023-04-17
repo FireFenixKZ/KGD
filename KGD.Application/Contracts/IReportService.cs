@@ -13,5 +13,6 @@ namespace KGD.Application.Contracts
         Task AddReport(ReportDTO reportDTO);
         Task AddReportHistory(ReportHistoryDTO reportHistoryDTO);
         Task EditReport(ReportDTO reportDTO);
+        Task<List<ReportHistoryDTO>> GetReportHistory(int reportId);
     }
 }

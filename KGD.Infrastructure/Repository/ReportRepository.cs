@@ -116,5 +116,9 @@ namespace KGD.Infrastructure.Repository
             _context.ReportHistories.Add(reportHistory);
             await _context.SaveChangesAsync();
         }
+        public async Task<List<ReportHistory>> GetReportHistory(int id)
+        {
+            return await _context.ReportHistories.Where(s => s.ReportId == id).ToListAsync();
+        }
     }
 }

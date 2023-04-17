@@ -14,7 +14,7 @@ namespace KGD.Application.Services.Report
         public async Task<List<ReportDTO>> GetReports(int? departmentId)
         {
             List<ReportDTO> reportDTOs = new List<ReportDTO>();
-            var reports = departmentId != null
+            var reports = departmentId == null
                 ? await _reportRepository.GetReports(CancellationToken.None)
                 : await _reportRepository.GetReports((int)departmentId, CancellationToken.None);
             foreach (var report in reports)
@@ -186,6 +186,7 @@ namespace KGD.Application.Services.Report
                 RegulationDate = reportDTO.RegulationDate,
                 ReportPeriod = reportDTO.ReportCreatedPeriod,
                 UserId = reportDTO.UserId,
+                Id = reportDTO.Id
             });
         }
         public async Task AddReportHistory(ReportHistoryDTO reportHistoryDTO)
@@ -197,6 +198,17 @@ namespace KGD.Application.Services.Report
                 ReportId = reportHistoryDTO.ReportId,
                 UserId = reportHistoryDTO.UserId
             });
+        }
+        public async Task<List<ReportHistoryDTO>> GetReportHistory(int reportId)
+        {
+            var list = await _reportRepository.GetReportHistory(reportId);
+            return list.Select(reportHistoryDTO => new ReportHistoryDTO()
+            {
+                Action = reportHistoryDTO.Action,
+                CreatedDateTime = reportHistoryDTO.CreatedDateTime,
+                ReportId = reportHistoryDTO.ReportId,
+                UserId = reportHistoryDTO.UserId
+            }).ToList();
         }
     }
 }
