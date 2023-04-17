@@ -1,0 +1,25 @@
+﻿@page "/addtaxpayer"
+@using KGD.Application.DTO;
+<h3>Добавление нового Налого плательщика</h3>
+
+<RadzenCard>
+    <div class="row">
+        <div class="col-md-10">
+            <RadzenLabel Text="БИН Налогоплательщика" />
+            <RadzenTextBox Style="width:100%;" @bind-Value="@taxPayerDTO.Bin" />
+        </div>
+        <div class="col-md-10">
+            <RadzenLabel Text="Имя налогоплательщика" />
+            <RadzenTextBox Style="width:100%;" @bind-Value="@taxPayerDTO.Name" />
+        </div>
+    </div>
+    <br />
+    <RadzenButton Text="Добавить" ButtonStyle="ButtonStyle.Success" Click="OnSubmit" />
+</RadzenCard>
+@code {
+    private TaxPayerDTO taxPayerDTO = new TaxPayerDTO();
+    public void OnSubmit()
+    {
+
+    }
+}

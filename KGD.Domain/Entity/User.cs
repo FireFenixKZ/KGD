@@ -12,7 +12,7 @@ namespace KGD.Domain.Entity
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public string Role { get; set; }
-        public int RegionId { get; set; }
-        public Region Region { get; set; }
+        public int DepartmentId { get; set; }
+        public Department Department { get; set; }
     }
 }

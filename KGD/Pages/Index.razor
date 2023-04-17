@@ -3,23 +3,40 @@
 @using KGD.Application.DTO;
 @attribute [Authorize]
 @inject NavigationManager _navMgr;
+@inject NotificationService _notificationService;
 @inject IReportService reportService;
+@inject IAuthService authService;
 <RadzenCard>
     <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" class="mt-2 mb-4" Text="Добавить новый отчет" Click="@Add" />
+    <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="add_circle_outline" class="mt-2 mb-4" Text="Посмотреть отчет" Click="@Details" />
+    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="add_circle_outline" class="mt-2 mb-4" Text="Изменить отчет" Click="@Edit" />
     <RadzenButton Text="Export XLS" Icon="grid_on" Click="@(args => Export("excel"))" class="mb-4 me-2" />
     <RadzenButton Text="Export CSV" Icon="wrap_text" Click="@(args => Export("csv"))" class="mb-4" />
-    <RadzenDataGrid AllowFiltering="true" ColumnsShowingText="Столбец" AllowColumnPicking="true" AutoWidth="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@reportList" TItem="ReportDTO" LogicalFilterOperator="LogicalFilterOperator.Or" EqualsText="Равно" ContainsText="Содержит">
+    <RadzenDataGrid AllowFiltering="true" AllowRowSelectOnRowClick="true"
+                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                    SelectionMode="DataGridSelectionMode.Single"
+                    ColumnsShowingText="Столбец"
+                    AllowColumnPicking="true"
+                    AllowAlternatingRows="false"
+                    FilterMode="FilterMode.Simple"
+                    AllowSorting="true"
+                    PageSize="5"
+                    Density="Density.Compact"
+                    AllowPaging="true"
+                    PagerHorizontalAlign="HorizontalAlign.Left"
+                    ShowPagingSummary="true"
+                    Data="@reportList" TItem="ReportDTO" EqualsText="Равно" ContainsText="Содержит"
+                    @bind-Value=@SelectedReportList>
         <Columns>
             <RadzenDataGridColumn TItem="ReportDTO" Property="Id" Title="ID" MinWidth="60px" />
             <RadzenDataGridColumn TItem="ReportDTO" Property="KGDCode" Title="Код ДГД" MinWidth="100px" />
             <RadzenDataGridColumn TItem="ReportDTO" Property="Department" Title="Департамент" MinWidth="200px" />
             <RadzenDataGridColumn TItem="ReportDTO" Property="NP_BIN" Title="БИН/ИИН проверяемого НП" MinWidth="200px" />
             <RadzenDataGridColumn TItem="ReportDTO" Property="NPName" Title="Наименование НП" MinWidth="300px" />
-            <RadzenDataGridColumn TItem="ReportDTO" Property="CreatedDate" Title="Дата открытия дела" MinWidth="200px" />
-            <RadzenDataGridColumn TItem="ReportDTO" Property="UpdatedDate" Title="Дата обновления дела" MinWidth="200px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="CreatedDate" FormatString="{0:d}" Title="Дата открытия дела" MinWidth="200px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="UpdatedDate" FormatString="{0:d}" Title="Дата обновления дела" MinWidth="200px" />
             <RadzenDataGridColumn TItem="ReportDTO" Property="Regulation" Title="№ предписания" MinWidth="200px" />
-            <RadzenDataGridColumn TItem="ReportDTO" Property="RegulationDate" Title="Дата вручения предписания" MinWidth="200px" />
+            <RadzenDataGridColumn TItem="ReportDTO" Property="RegulationDate" FormatString="{0:d}" Title="Дата вручения предписания" MinWidth="200px" />
             <RadzenDataGridColumn TItem="ReportDTO" Property="PeriodNP" Title="Период по искл. неблагонадежных НП  (год)" MinWidth="200px" />
             <RadzenDataGridColumn TItem="ReportDTO" Property="ExceptedNPName" Title="Наименование неблагонадежных НП, исключенных в ходе проверки" MinWidth="400px" />
             <RadzenDataGridColumn TItem="ReportDTO" Property="ExceptedNPBIN" Title="БИН/ИИН неблагонадежных НП исключенных в ходе проверки" MinWidth="400px" />
@@ -32,16 +49,41 @@
 </RadzenCard>
 @code {
     IEnumerable<ReportDTO> reportList = new List<ReportDTO>();
+    IList<ReportDTO> SelectedReportList = new List<ReportDTO>();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-        reportList = await reportService.GetReports();
+        if (authService.GetUserRole() == "Admin")
+        {
+            reportList = await reportService.GetReports();
+        }
+        else
+        {
+            reportList = await reportService.GetReports(Convert.ToInt32(authService.GetUserDepartmentId()));
+        }
     }
     public void Add()
     {
         _navMgr.NavigateTo("/add");
+    }
+    public async Task Details()
+    {
+        var selected = SelectedReportList.FirstOrDefault();
+        if (selected != null)
+            _navMgr.NavigateTo($"/details/{selected.Id}");
+    }
+    public async Task Edit()
+    {
+        var selected = SelectedReportList.FirstOrDefault();
+        if (selected != null)
+            _navMgr.NavigateTo($"/edit/{selected.Id}");
+        else
+            ShowNotification(new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning Summary", Detail = "Warning Detail", Duration = 4000 });
+    }
+    void ShowNotification(NotificationMessage message)
+    {
+        _notificationService.Notify(message);
     }
     public void Export(string type)
     {

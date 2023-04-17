@@ -17,12 +17,20 @@ namespace KGD.Infrastructure.Persistence
                     new Department
                     {
                         Id = 1,
-                        Name = "ВКО"
+                        Name = "ВКО",
+                        Code = "18xx"
                     },
                     new Department
                     {
                         Id = 2,
-                        Name = "СКО"
+                        Name = "СКО",
+                        Code = "48xx"
+                    },
+                    new Department
+                    {
+                        Id = 3,
+                        Name = "Жамбыл",
+                        Code = "21xx"
                     }
                 );
 
@@ -31,12 +39,17 @@ namespace KGD.Infrastructure.Persistence
                     new ServiceType
                     {
                         Id = 1,
-                        Name = "Услуга_1"
+                        Name = "ТМЗ"
                     },
                     new ServiceType
                     {
                         Id = 2,
-                        Name = "Услуга_2"
+                        Name = "аренда"
+                    },
+                    new ServiceType
+                    {
+                        Id = 3,
+                        Name = "транспортные услуги"
                     }
                 );
 
@@ -52,6 +65,12 @@ namespace KGD.Infrastructure.Persistence
                     {
                         Id = 2,
                         Name = "ТОО \"ЭлитСервис XXI\"",
+                        Bin = "41040008232"
+                    },
+                    new TaxPayer
+                    {
+                        Id = 3,
+                        Name = "ТОО Talas Investment Company",
                         Bin = "41040008232"
                     }
                 );
@@ -71,6 +90,7 @@ namespace KGD.Infrastructure.Persistence
                 );
         }
         public DbSet<User>? Users { get; set; }
+        public DbSet<ReportHistory>? ReportHistories { get; set; }
         public DbSet<Region>? Regions { get; set; }
         public DbSet<Report>? Reports { get; set; }
         public DbSet<TaxPayer>? TaxPayers { get; set; }

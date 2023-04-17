@@ -8,4 +8,7 @@ public interface IAuthService
 {
     Task<ServiceResponse<string>> Login(LoginModel model);
     Task<ServiceResponse<int>> Register(User user);
+    string GetUserDepartmentId();
+    int GetUserId();
+    string GetUserRole();
 }

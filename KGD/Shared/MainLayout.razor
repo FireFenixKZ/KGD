@@ -4,59 +4,86 @@
     <RadzenHeader>
         <div class="row">
             <div class="col">
-                <RadzenStack Orientation="Orientation.Horizontal"  AlignItems="AlignItems.Center" Gap="0">
-                    <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
-                    <RadzenLabel Text="КГД" />
-                </RadzenStack>
+                <AuthorizeView>
+                    <Authorized>
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+                            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" />
+                            <RadzenLabel Text="КГД" />
+                        </RadzenStack>
+                    </Authorized>
+                </AuthorizeView>
             </div>
             <div class="col" style="justify-content:end;align-items:center;display:flex;padding-right:2%;">
-                    <AuthorizeView>
-                        <Authorized>
-                            <NavLink href="logout" Match="NavLinkMatch.All">
-                                Logout
-                            </NavLink>
-                        </Authorized>
-                        <NotAuthorized>
-                            <NavLink href="registration" Match="NavLinkMatch.All">
-                                Registration
-                            </NavLink>
-                            <NavLink href="login" Match="NavLinkMatch.All">
-                                Login
-                            </NavLink>
-                        </NotAuthorized>
-                    </AuthorizeView>
+                <AuthorizeView>
+                    <Authorized>
+                        <NavLink href="logout" Match="NavLinkMatch.All">
+                            Logout
+                        </NavLink>
+                    </Authorized>
+                    <NotAuthorized>
+                        <NavLink href="login" Match="NavLinkMatch.All">
+                            Login
+                        </NavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
             </div>
         </div>
     </RadzenHeader>
-    <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
-        <AuthorizeView Roles="Admin">
-            <Authorized>
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
                 <RadzenPanelMenu>
-                    <a href="/" style="outline:hidden !important;">
-                    <RadzenPanelMenuItem Text="Главная" Icon="home" />
-                    </a>
-                    <a href="/add" style="outline:hidden !important;">
-                    <RadzenPanelMenuItem Text="Добавить новый отчет" Icon="account_box" />
-                    </a>
+                    <ChildContent>
+                        <RadzenPanelMenuItem Text="Отчеты">
+                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 1_КЭР"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 2_Обжалования"></RadzenPanelMenuItem>
+                            <a href="/" style="text-decoration: none !important;color: black;">
+                                <RadzenPanelMenuItem Icon="account_box" Text="Приложение 3_Неблагонадежные поставщики"></RadzenPanelMenuItem>
+                            </a>
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Выгрузка отчетов">
+                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 1_КЭР"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 2_Обжалования"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 3_Неблагонадежные поставщики"></RadzenPanelMenuItem>
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Справочники">
+                            <RadzenPanelMenuItem Icon="account_box" Text="Код ДГД"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Icon="account_box" Text="Департаменты"></RadzenPanelMenuItem>
+                            <RadzenPanelMenuItem Icon="account_box" Text="Неблагонадежные поставщики"></RadzenPanelMenuItem>
+                        </RadzenPanelMenuItem>
+                    </ChildContent>
                 </RadzenPanelMenu>
-            </Authorized>
-        </AuthorizeView>
+            </RadzenSidebar>
+        </Authorized>
+    </AuthorizeView>
 
-        <AuthorizeView Roles="User">
-            <Authorized>
-                <RadzenPanelMenu>
-                    <a href="/" style="outline:hidden !important;">
-                        <RadzenPanelMenuItem Text="Главная" Icon="home" />
-                    </a>
-                    <a href="/add" style="outline:hidden !important;">
-                        <RadzenPanelMenuItem Text="Добавить новый отчет" Icon="account_box" />
-                    </a>
-                </RadzenPanelMenu>
-            </Authorized>
-        </AuthorizeView>
-    </RadzenSidebar>
+    <AuthorizeView Roles="User">
+        <Authorized>
+            <RadzenSidebar @bind-Expanded="@sidebar1Expanded">
+                <ChildContent>
+                    <RadzenPanelMenuItem Text="Отчеты">
+                        <RadzenPanelMenuItem Icon="account_box" Text="Приложение 1_КЭР"></RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Icon="account_box" Text="Приложение 2_Обжалования"></RadzenPanelMenuItem>
+                        <a href="/" style="text-decoration: none !important;color: black;">
+                            <RadzenPanelMenuItem Icon="account_box" Text="Приложение 3_Неблагонадежные поставщики"></RadzenPanelMenuItem>
+                        </a>
+                    </RadzenPanelMenuItem>
+                    <RadzenPanelMenuItem Text="Выгрузка отчетов">
+                        <RadzenPanelMenuItem Icon="account_box" Text="Приложение 1_КЭР"></RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Icon="account_box" Text="Приложение 2_Обжалования"></RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Icon="account_box" Text="Приложение 3_Неблагонадежные поставщики"></RadzenPanelMenuItem>
+                    </RadzenPanelMenuItem>
+                    <RadzenPanelMenuItem Text="Справочники">
+                        <RadzenPanelMenuItem Icon="account_box" Text="Код ДГД"></RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Icon="account_box" Text="Департаменты"></RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Icon="account_box" Text="Неблагонадежные поставщики"></RadzenPanelMenuItem>
+                    </RadzenPanelMenuItem>
+                </ChildContent>
+            </RadzenSidebar>
+        </Authorized>
+    </AuthorizeView>
     <RadzenBody style="background-color:#f5f5f5;">
-            @Body
+        @Body
     </RadzenBody>
 </RadzenLayout>
 

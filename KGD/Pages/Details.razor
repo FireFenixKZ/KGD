@@ -33,7 +33,8 @@
         </div>
         <div class="col-md-6">
             <RadzenLabel Text="Period NP" />
-            <RadzenTextBox Disabled="true" Style="width:100%;" @bind-Value="@report.PeriodNP" />
+            <RadzenDatePicker Disabled="true" Style="width:100%;" @bind-Value="@report.PeriodNPFrom" DateFormat="dd:mm:yyyy" />
+            <RadzenDatePicker Disabled="true" Style="width:100%;" @bind-Value="@report.PeriodNPTo" DateFormat="dd:mm:yyyy" />
         </div>
     </div>    <br />
     <div class="row">
@@ -109,7 +110,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //report = await _reportService.GetReportById(Id.Value);
+        report = await _reportService.GetReportById(Id.Value);
     }
 
     public async Task History()

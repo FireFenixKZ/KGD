@@ -1,20 +1,17 @@
-﻿@page "/add"
+﻿@page "/edit/{Id:int}"
 @using KGD.Application.Contracts;
 @using KGD.Application.DTO;
-@using KGD.AuthProviders;
 @using KGD.Data.DTO;
 @using KGD.Services;
 @inject IReportService reportService;
-@inject IAuthService authService;
-@inject AuthProvider authProvider;
 
-<h3>Добавление нового отчета</h3>
+<h3>Изменение отчета</h3>
 
 <RadzenCard>
     <div class="row">
         <div class="col-md-6">
             <RadzenLabel Text="Отчет за период" />
-            <input type="date" style="width:100%;" value="@report.ReportCreatedPeriod">
+            <RadzenDatePicker Style="width:100%;" @bind-Value="@report.ReportCreatedPeriod" DateFormat="mm:yyyy" />
         </div>
         <div class="col-md-6">
             <RadzenLabel Text="Департамент" />
@@ -54,10 +51,9 @@
         </div>
         <div class="col-md-6">
             <RadzenLabel Text="Период по искл. неблагонадежных НП  (год)" />
-            <input type="date" style="width:45%;" value="@report.PeriodNPFrom">
+            <RadzenDatePicker Style="width:45%;" @bind-Value="@report.PeriodNPFrom" DateFormat="dd:mm:yyyy" />
             -
-            <input type="date" style="width:45%;" value="@report.PeriodNPTo">
-            <p style="color:red;">@dateError</p>
+            <RadzenDatePicker Style="width:45%;" @bind-Value="@report.PeriodNPTo" DateFormat="dd:mm:yyyy" />
         </div>
     </div>    <br />
     <div class="row">
@@ -67,7 +63,7 @@
         </div>
         <div class="col-md-6">
             <RadzenLabel Text="Дата вручения предписания" />
-            <input type="date" style="width:100%;" value="@report.RegulationDate">
+            <RadzenDatePicker Style="width:100%;" @bind-Value="@report.RegulationDate" DateFormat="dd:mm:yyyy" />
         </div>
     </div>    <br />
     <div class="row">
@@ -107,9 +103,9 @@
         </div>
     </div>    <br />
     <div class="row">
-        @* <div class="col-md-6">
-        <RadzenLabel Text="Код ДГД" />
-        <RadzenTextBox Style="width:100%;" @bind-Value="@report.KGDCode" />
+   @*     <div class="col-md-6">
+            <RadzenLabel Text="Код ДГД" />
+            <RadzenTextBox Style="width:100%;" @bind-Value="@report.KGDCode" />
         </div>*@
 
         <div class="col-md-6">
@@ -139,22 +135,21 @@
 </RadzenCard>
 
 @code {
+    [Parameter]
+    public int? Id { get; set; }
+
     private ReportDTO report = new ReportDTO();
     private List<DepartmentDTO> DepartmentList = new List<DepartmentDTO>();
     private List<ServiceTypeDTO> ServiceTypes = new List<ServiceTypeDTO>();
     private List<TaxPayerDTO> TaxPayers = new List<TaxPayerDTO>();
-    string dateError;
-    private object? UserId = null;
-    private object? DepartmentId = null;
+
     [Inject]
     private NavigationManager navigationManager { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var authstate = await authProvider.GetAuthenticationStateAsync();
-        UserId = authstate.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
-        DepartmentId = authstate.User.FindFirst(System.Security.Claims.ClaimTypes.Country).Value;
+        report = await reportService.GetReportById(Id.Value);
         DepartmentList = await reportService.GetDepartments();
         ServiceTypes = await reportService.GetServiceTypes();
         TaxPayers = await reportService.GetTaxPayers();
@@ -162,14 +157,7 @@
 
     private async void OnSubmit()
     {
-        if (report.PeriodNPFrom > report.PeriodNPTo)
-        {
-            dateError = "Period from must be lower than period to";
-            return;
-        }
-        report.UserId = Convert.ToInt32(UserId);
-        report.DepartmentId = Convert.ToInt32(DepartmentId);
-        await reportService.AddReport(report);
+        await reportService.EditReport(report);
         navigationManager.NavigateTo("/");
     }
 

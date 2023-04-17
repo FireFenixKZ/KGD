@@ -25,6 +25,8 @@ public class AuthService : IAuthService
     public int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
     public string GetUserEmail() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+    public string GetUserRole() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
+    public string GetUserDepartmentId() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Country);
 
     public async Task<ServiceResponse<string>> Login(LoginModel model)
     {
@@ -58,7 +60,7 @@ public class AuthService : IAuthService
         user.PasswordHash = passwordHash;
         user.PasswordSalt = passwordSalt;
         user.Role = "User";
-        user.RegionId = 1;
+        user.DepartmentId = 1;
 
         await _userRepository.AddUser(user);
 
@@ -91,7 +93,8 @@ public class AuthService : IAuthService
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(ClaimTypes.Country, user.DepartmentId.ToString())
         };
 
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8
@@ -101,7 +104,7 @@ public class AuthService : IAuthService
 
         var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(10),
+                expires: DateTime.Now.AddDays(100),
                 signingCredentials: creds);
 
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);

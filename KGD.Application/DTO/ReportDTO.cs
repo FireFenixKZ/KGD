@@ -10,10 +10,12 @@
         public string NP_BIN { get; set; }
         public string NPName { get; set; }
         public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set;}
+        public DateTime UpdatedDate { get; set; }
         public string Regulation { get; set; }
-        public DateTime RegulationDate { get; set; }
         public string PeriodNP { get; set; }
+        public DateTime RegulationDate { get; set; }
+        public DateTime PeriodNPFrom { get; set; }
+        public DateTime PeriodNPTo { get; set; }
         public int ExceptedNPId { get; set; }
         public string ExceptedNPName { get; set; }
         public string ExceptedNPBIN { get; set; }
@@ -21,7 +23,10 @@
         public string ServiceType { get; set; }
         public decimal TotalSum { get; set; }
         public decimal OborotSumm { get; set; }
-        public decimal TaxSumm { get; set;}
+        public decimal TaxSumm { get; set; }
+        public DateTime ReportCreatedPeriod { get; set; }
+        public int UserId { get; set; }
+        public UserDTO User { get; set; }
 
     }
 }
